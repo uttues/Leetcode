@@ -3,22 +3,23 @@
  * @return {number}
  */
 var lengthOfLIS = function (nums) {
-  let len = nums.length, res = 0, max
+  let len = nums.length
   if (!len) return 0
 
-  let dp = new Array(len).fill(1)
+  let dp = new Array(len).fill(1), maxIndex
+
   for (let i = 0; i < len; i++) {
-    max = 0
-    for (let j = i - 1; j >= 0; j--) {
-      if (nums[j] < nums[i]) {
-        if (dp[j] > max) max = dp[j]
+    // （满足要求nums[j] < nums[i]）用maxIndex记录[0,i-1]中dp值最大的下标
+    maxIndex = i
+    for (let j = 0; j < i; j++) {
+      if (nums[j] < nums[i] && dp[j] >= dp[maxIndex]) {
+        maxIndex = j
       }
     }
-    dp[i] = max + 1
-    res = Math.max(res, dp[i])  // 一边遍历一边更新 res
+    if (maxIndex !== i) dp[i] = dp[maxIndex] + 1
+
   }
-  return res
-  // return Math.max(...dp) 改在一边遍历的时候一边用res记录
+  return Math.max(...dp)
 };
 
 console.log(lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]));
